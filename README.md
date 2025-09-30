@@ -2,6 +2,21 @@
 
 > 目标：面向“拍照→OCR→解析→判分→报告”的移动端应用。本文给出**可落地**的原型草图、Flutter 技术选型、目录结构与分层架构，并附关键代码骨架。
 
+## 快速开始（M0 原型）
+
+该仓库现已包含基于 Flutter 的最小可运行原型，覆盖 README 中的核心流程（作业列表 → 拍照上传 → 判分结果）。
+
+### 运行步骤
+1. 安装 Flutter 3.22+ 与 Dart 3。
+2. 执行 `flutter pub get` 拉取依赖。
+3. 使用 `flutter run -t lib/main_dev.dart` 启动开发环境（或替换为 `main_stg.dart` / `main_prod.dart` 测试多环境配置）。
+
+### 功能概览
+- Material 3 主题、深浅色模式与 go_router 路由骨架。
+- Riverpod 状态管理模拟 "queued → ocr → parsed → graded → reported" 提交流水线。
+- 作业列表、拍照上传、判分结果页的最小 UI，便于后续接入真实后端。
+
+
 ---
 
 ## 1. 信息架构 & 用户流程
