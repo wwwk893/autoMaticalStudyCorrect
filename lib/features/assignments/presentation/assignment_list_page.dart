@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../controllers/assignment_controller.dart';
 import '../models/assignment.dart';
-import '../../submission/presentation/submit_page.dart';
+import '../../upload/presentation/upload_page.dart';
 import '../../result/presentation/result_page.dart';
 
 class AssignmentListPage extends ConsumerWidget {
@@ -16,9 +17,10 @@ class AssignmentListPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final assignments = ref.watch(assignmentListProvider);
     final formatter = ref.watch(dateFormatterProvider);
+    final loc = AppLocalizations.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('作业列表'),
+        title: Text(loc.assignments),
       ),
       body: ListView.separated(
         padding: const EdgeInsets.all(16),
@@ -50,7 +52,7 @@ class AssignmentListPage extends ConsumerWidget {
                         FilledButton(
                           onPressed: () {
                             context.pushNamed(
-                              SubmitPage.routeName,
+                              UploadPage.routeName,
                               pathParameters: {'id': assignment.id},
                             );
                           },

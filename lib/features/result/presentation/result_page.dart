@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../submission/controllers/submission_controller.dart';
-import '../../submission/models/submission.dart';
+import '../../../l10n/app_localizations.dart';
+import '../../submission/state/submission_controller.dart';
+import '../../submission/state/submission_models.dart';
 
 class ResultPage extends ConsumerWidget {
   const ResultPage({super.key, required this.submissionId});
@@ -13,33 +14,31 @@ class ResultPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final loc = AppLocalizations.of(context);
     final state = ref.watch(submissionControllerProvider);
     final submission = state.history.firstWhere(
       (element) => element.id == submissionId,
-      orElse: () => state.history.isEmpty
-          ? Submission(
-              id: submissionId,
-              assignmentId: submissionId,
-              status: SubmissionStatus.reported,
-              score: 87,
-            )
-          : state.history.first,
+      orElse: () => state.active ??
+          SubmissionSummary(
+            id: submissionId,
+            assignmentId: submissionId,
+            stage: SubmissionStage.reported,
+            score: 90,
+          ),
     );
     final isChinese = submission.assignmentId.contains('cn');
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('判分结果'),
+        title: Text(loc.review),
       ),
       body: ListView(
         padding: const EdgeInsets.all(24),
         children: [
-          Text(
-            '提交编号：${submission.id}',
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
+          Text('提交编号：${submission.id}',
+              style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 8),
-          Text('当前状态：${_statusLabel(submission.status)}'),
+          Text('当前状态：${submission.stage.badgeLabel}'),
           if (submission.score != null)
             Padding(
               padding: const EdgeInsets.only(top: 8),
@@ -54,25 +53,10 @@ class ResultPage extends ConsumerWidget {
       ),
     );
   }
-
-  String _statusLabel(SubmissionStatus status) {
-    switch (status) {
-      case SubmissionStatus.queued:
-        return '排队中';
-      case SubmissionStatus.ocr:
-        return 'OCR 识别';
-      case SubmissionStatus.parsed:
-        return '解析中';
-      case SubmissionStatus.graded:
-        return '已判分';
-      case SubmissionStatus.reported:
-        return '报告生成';
-    }
-  }
 }
 
 class _ChineseResultSection extends StatelessWidget {
-  const _ChineseResultSection({super.key});
+  const _ChineseResultSection();
 
   @override
   Widget build(BuildContext context) {
@@ -82,10 +66,8 @@ class _ChineseResultSection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              '语文·古诗词默写',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+            Text('语文·古诗词默写',
+                style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 12),
             Text('第1题（1分/行）'),
             const SizedBox(height: 8),
@@ -122,7 +104,7 @@ class _ChineseResultSection extends StatelessWidget {
 }
 
 class _MathResultSection extends StatelessWidget {
-  const _MathResultSection({super.key});
+  const _MathResultSection();
 
   @override
   Widget build(BuildContext context) {
@@ -132,10 +114,8 @@ class _MathResultSection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              '数学·等式等价验证',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+            Text('数学·等式等价验证',
+                style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 12),
             const Text('你的答案： (x + 1)^2'),
             const Text('标准答案： x^2 + 2x + 1'),

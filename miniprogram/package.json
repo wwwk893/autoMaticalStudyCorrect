@@ -1,0 +1,11 @@
+{
+  "name": "auto-matical-miniprogram",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "gen:mp-sdk": "node scripts/gen-sdk.js"
+  },
+  "devDependencies": {
+    "openapi-typescript-codegen": "^0.29.0"
+  }
+}
